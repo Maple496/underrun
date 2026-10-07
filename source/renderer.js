@@ -21,6 +21,8 @@ var
 
 	camera_x = 0, camera_y = 0, camera_z = 0, camera_shake = 0,
 	camera_uniform,	
+	aspect_uniform,
+	vy_uniform,
 
 	shader_attribute_vec = 'attribute vec',
 	shader_varying = 
@@ -36,6 +38,8 @@ var
 		shader_attribute_vec + "2 uv;" +
 		shader_attribute_vec + "3 n;" +
 		shader_uniform + "vec3 cam;" +
+		shader_uniform + "float vx;" +
+		shader_uniform + "float vy;" +
 		shader_uniform + "float l[7*"+max_lights+"];" +
 		shader_const_mat4 + "v=mat4(1,0,0,0,0,.707,.707,0,0,-.707,.707,0,0,-22.627,-22.627,1);" + // view
 		shader_const_mat4 + "r=mat4(.977,0,0,0,0,1.303,0,0,0,0,-1,-1,0,0,-2,0);"+ // projection
@@ -51,6 +55,8 @@ var
 			"}" +
 			"vuv=uv;" +
 			"gl_Position=r*v*(vec4(p+cam,1.));" +
+			"gl_Position.x*=vx;" +
+			"gl_Position.y*=vy;" +
 		"}",
 
 	fragment_shader =
@@ -97,6 +103,8 @@ function renderer_init() {
 
 	camera_uniform = gl.getUniformLocation(shader_program, "cam");
 	light_uniform = gl.getUniformLocation(shader_program, "l");
+	aspect_uniform = gl.getUniformLocation(shader_program, "vx");
+	vy_uniform = gl.getUniformLocation(shader_program, "vy");
 
 	gl.enable(gl.DEPTH_TEST);
 	gl.enable(gl.BLEND);
@@ -119,6 +127,13 @@ function renderer_bind_image(image) {
 }
 
 function renderer_prepare_frame() {
+	// 自适应视口（2026-10-07 汉化移植补丁）：画布尺寸跟随容器，
+	// 纵横比变化时以 16:9 为基线只扩不缩（宽屏看更宽、竖屏看更深，
+	// 永不拉伸画面）。
+	gl.viewport(0, 0, c.width, c.height);
+	var ar = c.width / c.height, base = 16 / 9;
+	gl.uniform1f(aspect_uniform, Math.min(1, base / ar));
+	gl.uniform1f(vy_uniform, Math.min(1, ar / base));
 	num_verts = level_num_verts;
 	num_lights = 0;
 

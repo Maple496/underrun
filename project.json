@@ -1,9 +1,9 @@
 {
   "name": "UNDERRUN",
   "brief": "UNDERRUN 平台移植版：phoboslab js13k 射击经典（MIT 开源）",
-  "work_ref": "WORKS-",
+  "work_ref": "WORKS-3474",
   "entry": "src/underrun-adapter.js",
-  "status": "ok",
+  "status": "wip",
   "files": [
     {
       "path": "src/underrun-assets.js",

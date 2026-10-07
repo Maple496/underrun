@@ -14,8 +14,9 @@ for name in ("q2", "l1", "l2", "l3"):
     uris[name] = "data:image/png;base64," + base64.b64encode(b).decode()
 
 # 游戏码补丁：资产装载器走 __URIS；RAF 挂 __alive 停帧钩子；包进 boot 函数
-game, n1 = re.subn(r'\(\w+=new Image\)\.src="m/"\+(\w+)\+"\.png"',
-                   r"(t=new Image).src=__URIS[\1]", game)
+# 保留原赋值目标变量名（混淆名随构建变化，onload 引用必须同源）
+game, n1 = re.subn(r'\((\w+)=new Image\)\.src="m/"\+(\w+)\+"\.png"',
+                   r"(\1=new Image).src=__URIS[\2]", game)
 game = game.replace(",t.onload=t", ",t.onload=t")
 game, n2 = re.subn(r"requestAnimationFrame\((\w+)\)",
                    r"__alive&&requestAnimationFrame(\1)", game)

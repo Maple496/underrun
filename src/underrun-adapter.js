@@ -19,7 +19,7 @@ Work.register({
     this._nodes = [style, c, a];
     // 页脚：版本号展示，底部居中
     var footer = document.createElement('div');
-    footer.textContent = 'Version v1.0.0';
+    footer.textContent = 'v1.0.0';
     footer.style.position = 'absolute';
     footer.style.bottom = '0';
     footer.style.left = '0';

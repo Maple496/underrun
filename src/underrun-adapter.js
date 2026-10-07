@@ -17,17 +17,19 @@ Work.register({
     a.id = 'a';
     st.appendChild(c); st.appendChild(a);
     this._nodes = [style, c, a];
-    // 顶栏标题：原标题 'UNDERRUN'，缩短一半为 'UNDER'
-    var title = document.createElement('div');
-    title.textContent = 'UNDER';
-    title.style.position = 'absolute';
-    title.style.top = '8px';
-    title.style.left = '10px';
-    title.style.color = '#8aa';
-    title.style.font = '12px monospace';
-    title.style.pointerEvents = 'none';
-    st.appendChild(title);
-    this._nodes.push(title);
+    // 页脚：版本号展示（底部）
+    var footer = document.createElement('div');
+    footer.textContent = 'v1.0.0';
+    footer.style.position = 'absolute';
+    footer.style.bottom = '0';
+    footer.style.left = '0';
+    footer.style.right = '0';
+    footer.style.textAlign = 'center';
+    footer.style.color = '#8aa';
+    footer.style.font = '12px monospace';
+    footer.style.pointerEvents = 'none';
+    st.appendChild(footer);
+    this._nodes.push(footer);
     var self = this;
     self._timers = []; self._rafs = [];
     var oST = window.setTimeout, oSIT = window.setInterval,

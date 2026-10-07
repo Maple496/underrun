@@ -17,6 +17,12 @@ Work.register({
     a.id = 'a';
     st.appendChild(c); st.appendChild(a);
     this._nodes = [style, c, a];
+    // 汉化角标：左上角小字（绝对定位，随 _nodes 清理）
+    var badge = document.createElement('div');
+    badge.textContent = 'UNDERRUN 汉化版';
+    badge.style.cssText = 'position:absolute;top:8px;left:10px;color:#8aa;font:12px monospace;pointer-events:none;';
+    st.appendChild(badge);
+    this._nodes.push(badge);
     var self = this;
     self._timers = []; self._rafs = [];
     var oST = window.setTimeout, oSIT = window.setInterval,

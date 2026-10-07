@@ -128,8 +128,8 @@ function load_level(id, callback) {
 		level_num_verts = num_verts;
 
 		terminal_show_notice(
-			'SCANNING FOR OFFLINE SYSTEMS...___' +
-			(cpus_total)+' SYSTEMS FOUND'
+			'正在扫描离线系统...___' +
+			(cpus_total)+' 个系统'
 		);
 		callback && callback();
 	});

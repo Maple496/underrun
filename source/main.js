@@ -1,12 +1,12 @@
 
 
-terminal_write_line('INITIATING...');
+terminal_write_line('正在初始化...');
 
 audio_init(function(){
 	_document.onclick = function() {
 		_document.onclick = null;
 		terminal_cancel();
-		terminal_write_line('INITIATING...', function(){
+		terminal_write_line('正在初始化...', function(){
 			renderer_init();
 				
 			load_image('q2', function() {

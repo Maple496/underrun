@@ -21,30 +21,30 @@ class entity_cpu_t extends entity_t {
 			cpus_rebooted++;
 
 			var reboot_message = 
-				'\n\n\nREBOOTING..._' +
-				'SUCCESS\n';
+				'\n\n\n重启中..._' +
+				'成功\n';
 
 			if (cpus_total-cpus_rebooted > 0) {
 				terminal_show_notice(
 					reboot_message + 
-					(cpus_total-cpus_rebooted)+' SYSTEM(S) STILL OFFLINE'
+					(cpus_total-cpus_rebooted)+' 个系统仍离线'
 				);
 			}
 			else {
 				if (current_level != 3) {
 					terminal_show_notice(
 						reboot_message +
-						'ALL SYSTEMS ONLINE\n' +
-						'TRIANGULATING POSITION FOR NEXT HOP...___' +
-						'TARGET ACQUIRED\n' +
-						'JUMPING...',
+						'全部系统已上线\n' +
+						'正在为下一跳三角定位...___' +
+						'目标已锁定\n' +
+						'跳跃中...',
 						next_level
 					);
 				}
 				else {
 					terminal_show_notice(
 						reboot_message +
-						'ALL SYSTEMS ONLINE',
+						'全部系统已上线',
 						next_level
 					);
 				}

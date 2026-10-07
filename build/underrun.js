@@ -128,8 +128,8 @@ function load_level(id, callback) {
 		level_num_verts = num_verts;
 
 		terminal_show_notice(
-			'SCANNING FOR OFFLINE SYSTEMS...___' +
-			(cpus_total)+' SYSTEMS FOUND'
+			'正在扫描离线系统...___' +
+			(cpus_total)+' 个系统'
 		);
 		callback && callback();
 	});
@@ -590,8 +590,8 @@ class entity_player_t extends entity_t {
 		this.y = 10;
 		this.z += 5;
 		terminal_show_notice(
-			'DEPLOYMENT FAILED\n' +
-			'RESTORING BACKUP...'
+			'部署失败\n' +
+			'正在恢复备份...'
 		);
 		setTimeout(reload_level, 3000);
 	}
@@ -627,30 +627,30 @@ class entity_cpu_t extends entity_t {
 			cpus_rebooted++;
 
 			var reboot_message = 
-				'\n\n\nREBOOTING..._' +
-				'SUCCESS\n';
+				'\n\n\n重启中..._' +
+				'成功\n';
 
 			if (cpus_total-cpus_rebooted > 0) {
 				terminal_show_notice(
 					reboot_message + 
-					(cpus_total-cpus_rebooted)+' SYSTEM(S) STILL OFFLINE'
+					(cpus_total-cpus_rebooted)+' 个系统仍离线'
 				);
 			}
 			else {
 				if (current_level != 3) {
 					terminal_show_notice(
 						reboot_message +
-						'ALL SYSTEMS ONLINE\n' +
-						'TRIANGULATING POSITION FOR NEXT HOP...___' +
-						'TARGET ACQUIRED\n' +
-						'JUMPING...',
+						'全部系统已上线\n' +
+						'正在为下一跳三角定位...___' +
+						'目标已锁定\n' +
+						'跳跃中...',
 						next_level
 					);
 				}
 				else {
 					terminal_show_notice(
 						reboot_message +
-						'ALL SYSTEMS ONLINE',
+						'全部系统已上线',
 						next_level
 					);
 				}
@@ -1727,69 +1727,69 @@ var terminal_text_ident = '&gt; ';
 var terminal_text_title = '' +
 	'UNDERRUN\n' +
 	'__ \n' +
-	'CONCEPT, GRAPHICS &AMP; PROGRAMMING:\n' +
+	'概念 / 画面 / 程序：\n' +
 	'DOMINIC SZABLEWSKI // PHOBOSLAB.ORG\n' +
 	'__ \n' +
-	'MUSIC:\n' +
+	'音乐：\n' +
 	'ANDREAS LÖSCH // NO-FATE.NET\n' +
 	'___ \n' +
-	'SYSTEM VERSION: 13.20.18\n' +
+	'系统版本: 13.20.18\n' +
 	'CPU: PL(R) Q-COATL 7240 @ 12.6 THZ\n' +
-	'MEMORY: 108086391056891900 BYTES\n' +
+	'内存: 108086391056891900 字节\n' +
 	' \n' +
-	'CONNECTING...';
+	'正在连接...';
 
 var terminal_text_garbage = 
 	'´A1e{∏éI9·NQ≥ÀΩ¸94CîyîR›kÈ¡˙ßT-;ûÅf^˛,¬›A∫Sã€«ÕÕ' +
 	'1f@çX8ÎRjßf•ò√ã0êÃcÄ]Î≤moDÇ’ñ‰\\ˇ≠n=(s7É;';
 
 var terminal_text_story = 
-	'DATE: SEP. 13, 2718 - 13:32\n' +
-	'CRITICAL SOFTWARE FAILURE DETECTED\n' +
-	'ANALYZING...\n' +
+	'日期: 2718 年 9 月 13 日 - 13:32\n' +
+	'检测到关键软件故障\n' +
+	'分析中...\n' +
 	'____\n \n' +
 	'ERROR CODE: JS13K2018\n' +
-	'STATUS: SYSTEMS OFFLINE\n' +
-	'DESCRIPTION: BUFFER UNDERRUN DUE TO SATCOM R.U.D.\n' +
-	'AFFECTED SYSTEM: FACILITY AUTOMATION\n' +
-	'AFFECTED SUBSYSTEMS: AI, RADIATION SHIELDS, POWER MANAGEMENT\n' +
+	'状态: 系统全部离线\n' +
+	'故障描述: 卫星链路 R.U.D. 导致缓冲区欠载\n' +
+	'受影响系统: 设施自动化\n' +
+	'受影响子系统: AI、辐射护盾、电力管理\n' +
 	' \n' +
-	'INITIATING RESCUE SYSTEM...\n' +
+	'正在启动救援系统...\n' +
 	'___' +
-	'FAILED\n \n' +
-	'ATTEMPTING AUTOMATED REBOOT...\n' +
+	'失败\n \n' +
+	'正在尝试自动重启...\n' +
 	'___' +
-	'FAILED\n' +
+	'失败\n' +
 	'_ \n \n' +
-	'MANUAL REBOOT OF ALL SYSTEMS REQUIRED\n' +
+	'需要手动重启全部系统\n' +
 	'_ \n' +
-	'USE WASD OR CURSOR KEYS TO MOVE, MOUSE TO SHOOT\n' +
-	'CLICK TO INITIATE YOUR DEPLOYMENT\n ';
+	'用 WASD 或方向键移动，鼠标射击\n' +
+	'点击开始部署\n ';
 
 var terminal_text_outro = 
-	'ALL SATELLITE LINKS ONLINE\n' +
-	'CONNECTING...___' +
-	'CONNECTION ESTABLISHED\n' +
-	'RECEIVING TRANSMISSION...___ \n' +
+	'全部卫星链路在线\n' +
+	'连接中...___' +
+	'连接已建立\n' +
+	'正在接收传输...___ \n' +
 	
-	'SENT: SEP. 13, 2018\n' +
-	'RCVD: SEP. 13, 2718\n \n' +
+	'发送: 2018 年 9 月 13 日\n' +
+	'接收: 2718 年 9 月 13 日\n \n' +
 	
-	'THANKS FOR PLAYING ❤_ \n' +
-	'I HAVE PREVIOUSLY BEEN A PROUD SPONSOR OF THE JS13K\n' +
-	'COMPETITION SINCE THE VERY FIRST ONE BACK IN 2012.\n' +
-	'HOWEVER, THIS YEAR\'S COMPETITION WAS MY FIRST ONE\n' +
-	'AS A PARTICIPANT AND IT HAS BEEN TREMENDOUS FUN!\n \n' +
+	'感谢游玩 ❤_ \n' +
+	'自 2012 年首届 JS13K 竞赛起，我一直自豪地赞助\n' +
+	'这项赛事。\n' +
+	'而今年是我首次以参赛者身份参与，\n' +
+	'整个过程充满了乐趣!\n \n' +
 	
-	'I WANT TO THANK MY DEAR FRIEND ANDREAS LÖSCH OF\n' +
-	'NO-FATE.NET FOR COMPOSING SOME AWESOME MUSIC ON\n' + 
-	'SUCH SHORT NOTICE.\n \n' +
+	'我要感谢挚友 NO-FATE.NET 的 ANDREAS LÖSCH，\n' +
+	'感谢他在极短时间内谱写出出色的音乐。\n' + 
+	'\n \n' +
 
-	'FURTHER THANKS GO OUT TO THE JS13K STAFF, THE\n' +
-	'SONANT-X DEVELOPERS AND ALL OTHER PARTICIPANTS\n' +
-	'IN THIS YEAR\'S JS13K. SEE YOU NEXT YEAR!\n \n' +
+	'同样感谢 JS13K 工作人员、SONANT-X 开发者\n' +
+	'以及本届 JS13K 的所有参赛者。\n' +
+	'明年再见!\n \n' +
 	'DOMINIC__' +
-	'END OF TRANSMISSION';
+	'传输结束（汉化：AI 工程工坊）';
 
 var terminal_text_buffer = [],
 	terminal_state = 0,
@@ -1987,13 +1987,13 @@ function gamepad_poll() {
 gamepad_poll();
 
 
-terminal_write_line('INITIATING...');
+terminal_write_line('正在初始化...');
 
 audio_init(function(){
 	_document.onclick = function() {
 		_document.onclick = null;
 		terminal_cancel();
-		terminal_write_line('INITIATING...', function(){
+		terminal_write_line('正在初始化...', function(){
 			renderer_init();
 				
 			load_image('q2', function() {

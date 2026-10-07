@@ -55,5 +55,6 @@ Work.register({
     (self._nodes || []).forEach(function (n) {
       if (n.parentNode) n.parentNode.removeChild(n);
     });
+    self._timers = []; self._rafs = []; self._nodes = [];
   },
 });

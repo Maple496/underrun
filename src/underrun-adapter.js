@@ -1,4 +1,5 @@
 // 入口（Work.register 容器合同）：DOM 注入 + 尺寸自适应 + 启动
+// + 定时器/RAF 全量跟踪（destroy 一键清空，老游戏无拆解式清理）
 Work.register({
   name: 'underrun',
   mount: function (ctx) {
@@ -16,11 +17,30 @@ Work.register({
     a.id = 'a';
     st.appendChild(c); st.appendChild(a);
     this._nodes = [style, c, a];
+    var self = this;
+    self._timers = []; self._rafs = [];
+    var oST = window.setTimeout, oSIT = window.setInterval,
+        oRAF = window.requestAnimationFrame;
+    window.setTimeout = function (f, t) {
+      var id = oST(function () { if (!self._dead && typeof f === 'function') f(); }, t);
+      self._timers.push(id); return id;
+    };
+    window.setInterval = function (f, t) {
+      var id = oSIT(function () { if (!self._dead && typeof f === 'function') f(); }, t);
+      self._timers.push(id); return id;
+    };
+    window.requestAnimationFrame = function (f) {
+      var id = oRAF(function (t) { if (!self._dead) f(t); });
+      self._rafs.push(id); return id;
+    };
     underrun_boot(c, a);
   },
   destroy: function () {
+    this._dead = !0;
     if (window.__underrun_stop) window.__underrun_stop();
     var self = this;
+    (self._timers || []).forEach(function (id) { clearTimeout(id); clearInterval(id); });
+    (self._rafs || []).forEach(function (id) { cancelAnimationFrame(id); });
     (self._nodes || []).forEach(function (n) {
       if (n.parentNode) n.parentNode.removeChild(n);
     });

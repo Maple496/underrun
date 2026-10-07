@@ -1694,14 +1694,26 @@ var music_dark_meat_beat = {
 		lfo_freq: 0,
 		lfo_amt: 0,
 		lfo_waveform: 0
-	};var audio_ctx = new (window.webkitAudioContext||window.AudioContext)(),
-	audio_sfx_shoot,
-	audio_sfx_hit,
-	audio_sfx_hurt,
-	audio_sfx_beep,
-	audio_sfx_pickup,
-	audio_sfx_terminal,
-	audio_sfx_explode;
+	};// 无 AudioContext 环境（无头验证/受限沙箱）回退：静音 dummy，游戏可玩
+var audio_ctx = null,
+	audio_music_dark_meat_beat = null,
+	audio_sfx_shoot = null,
+	audio_sfx_hit = null,
+	audio_sfx_hurt = null,
+	audio_sfx_beep = null,
+	audio_sfx_pickup = null,
+	audio_sfx_terminal = null,
+	audio_sfx_explode = null;
+try {
+	audio_ctx = new (window.AudioContext || window.webkitAudioContext)();
+} catch (e) {
+	audio_ctx = {
+		destination: {},
+		createBuffer: function (c, n) { return { getChannelData: function () { return new Float32Array(n); } }; },
+		createBufferSource: function () { return { connect: function () {}, start: function () {}, stop: function () {}, buffer: null, loop: false }; },
+		createGain: function () { return { connect: function () {}, gain: {} }; }
+	};
+}
 
 function audio_init(callback) {
 	sonantxr_generate_song(audio_ctx, music_dark_meat_beat, function(buffer){

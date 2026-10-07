@@ -14,8 +14,9 @@ for name in ("q2", "l1", "l2", "l3"):
     uris[name] = "data:image/png;base64," + base64.b64encode(b).decode()
 
 # 游戏码补丁：资产装载器走 __URIS；RAF 挂 __alive 停帧钩子；包进 boot 函数
-game, n1 = re.subn(r'\(t=new Image\)\.src="m/"\+(\w+)\+"\.png"',
+game, n1 = re.subn(r'\(\w+=new Image\)\.src="m/"\+(\w+)\+"\.png"',
                    r"(t=new Image).src=__URIS[\1]", game)
+game = game.replace(",t.onload=t", ",t.onload=t")
 game, n2 = re.subn(r"requestAnimationFrame\((\w+)\)",
                    r"__alive&&requestAnimationFrame(\1)", game)
 assert n1 == 1 and n2 == 1, (n1, n2)
@@ -34,6 +35,7 @@ open(os.path.join(ROOT, "src", "underrun-game.js"), "w", encoding="utf-8").write
 css_js = json.dumps("body{margin:0;background:#000}" + style)
 open(os.path.join(ROOT, "src", "underrun-adapter.js"), "w", encoding="utf-8").write(
     "// 入口（Work.register 容器合同）：DOM 注入 + 尺寸自适应 + 启动\n"
+    "// + 定时器/RAF 全量跟踪（destroy 一键清空，老游戏无拆解式清理）\n"
     "Work.register({\n"
     "  name: 'underrun',\n"
     "  mount: function (ctx) {\n"
@@ -51,11 +53,30 @@ open(os.path.join(ROOT, "src", "underrun-adapter.js"), "w", encoding="utf-8").wr
     "    a.id = 'a';\n"
     "    st.appendChild(c); st.appendChild(a);\n"
     "    this._nodes = [style, c, a];\n"
+    "    var self = this;\n"
+    "    self._timers = []; self._rafs = [];\n"
+    "    var oST = window.setTimeout, oSIT = window.setInterval,\n"
+    "        oRAF = window.requestAnimationFrame;\n"
+    "    window.setTimeout = function (f, t) {\n"
+    "      var id = oST(function () { if (!self._dead && typeof f === 'function') f(); }, t);\n"
+    "      self._timers.push(id); return id;\n"
+    "    };\n"
+    "    window.setInterval = function (f, t) {\n"
+    "      var id = oSIT(function () { if (!self._dead && typeof f === 'function') f(); }, t);\n"
+    "      self._timers.push(id); return id;\n"
+    "    };\n"
+    "    window.requestAnimationFrame = function (f) {\n"
+    "      var id = oRAF(function (t) { if (!self._dead) f(t); });\n"
+    "      self._rafs.push(id); return id;\n"
+    "    };\n"
     "    underrun_boot(c, a);\n"
     "  },\n"
     "  destroy: function () {\n"
+    "    this._dead = !0;\n"
     "    if (window.__underrun_stop) window.__underrun_stop();\n"
     "    var self = this;\n"
+    "    (self._timers || []).forEach(function (id) { clearTimeout(id); clearInterval(id); });\n"
+    "    (self._rafs || []).forEach(function (id) { cancelAnimationFrame(id); });\n"
     "    (self._nodes || []).forEach(function (n) {\n"
     "      if (n.parentNode) n.parentNode.removeChild(n);\n"
     "    });\n"

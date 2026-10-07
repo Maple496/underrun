@@ -17,7 +17,7 @@ Work.register({
     a.id = 'a';
     st.appendChild(c); st.appendChild(a);
     this._nodes = [style, c, a];
-    // 页脚：版本号展示，底部居中
+    // 页脚：版本号展示，底部居中，不影响交互
     var footer = document.createElement('div');
     footer.textContent = 'v1.0.0';
     footer.style.position = 'absolute';
@@ -27,7 +27,11 @@ Work.register({
     footer.style.textAlign = 'center';
     footer.style.color = '#8aa';
     footer.style.font = '12px monospace';
+    footer.style.lineHeight = '16px';
     footer.style.pointerEvents = 'none';
+    footer.style.userSelect = 'none';
+    footer.style.zIndex = '10';
+    footer.style.textShadow = '0 0 4px #000';
     st.appendChild(footer);
     this._nodes.push(footer);
     var self = this;

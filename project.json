@@ -1,0 +1,20 @@
+{
+  "name": "UNDERRUN",
+  "brief": "phoboslab js13k 2018 射击（MIT）汉化移植版",
+  "entry": "src/underrun-adapter.js",
+  "files": [
+    {
+      "path": "src/underrun-assets.js",
+      "role": "资产 data URI 表"
+    },
+    {
+      "path": "src/underrun-game.js",
+      "role": "游戏本体（压缩产物，勿手改，改 source/ 后重建）"
+    },
+    {
+      "path": "src/underrun-adapter.js",
+      "role": "入口：容器适配与启动"
+    }
+  ],
+  "generated_by": "proj_forge（AI 工程工坊）"
+}

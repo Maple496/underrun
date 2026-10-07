@@ -1,4 +1,16 @@
-var audio_ctx = new (window.webkitAudioContext||window.AudioContext)(),
+// 无 AudioContext 环境（无头验证/受限沙箱）回退：静音 dummy，游戏可玩
+// 无 AudioContext 环境（无头验证/受限沙箱）回退：静音 dummy，游戏可玩
+var audio_ctx = null;
+try {
+	audio_ctx = new (window.AudioContext || window.webkitAudioContext)();
+} catch (e) {
+	audio_ctx = {
+		destination: {},
+		createBuffer: function (c, n) { return { getChannelData: function () { return new Float32Array(n); } }; },
+		createBufferSource: function () { return { connect: function () {}, start: function () {}, stop: function () {}, buffer: null, loop: false }; },
+		createGain: function () { return { connect: function () {}, gain: {} }; }
+	};
+}
 	audio_sfx_shoot,
 	audio_sfx_hit,
 	audio_sfx_hurt,

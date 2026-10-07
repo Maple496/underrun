@@ -17,9 +17,9 @@ Work.register({
     a.id = 'a';
     st.appendChild(c); st.appendChild(a);
     this._nodes = [style, c, a];
-    // 页脚：仅版本号，底部居中
+    // 页脚：版本号展示，底部居中
     var footer = document.createElement('div');
-    footer.textContent = 'v1.0.0';
+    footer.textContent = 'Version v1.0.0';
     footer.style.position = 'absolute';
     footer.style.bottom = '0';
     footer.style.left = '0';

@@ -1,5 +1,7 @@
 // 入口（Work.register 容器合同）：DOM 注入 + 尺寸自适应 + 启动
 // + 定时器/RAF 全量跟踪（destroy 一键清空，老游戏无拆解式清理）
+var VERSION = 'v1.0.0';
+
 Work.register({
   name: 'underrun',
   mount: function (ctx) {
@@ -19,7 +21,7 @@ Work.register({
     this._nodes = [style, c, a];
     // 页脚：版本号展示（VERSION v1.0.0），底部居中，不影响交互
     var footer = document.createElement('div');
-    footer.textContent = 'VERSION v1.0.0';
+    footer.textContent = 'VERSION ' + VERSION;
     footer.style.position = 'absolute';
     footer.style.bottom = '0';
     footer.style.left = '0';

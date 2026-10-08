@@ -1,6 +1,7 @@
 // 入口（Work.register 容器合同）：DOM 注入 + 尺寸自适应 + 启动
 // + 定时器/RAF 全量跟踪（destroy 一键清空，老游戏无拆解式清理）
-var VERSION = 'v1.0.0';
+// v1.1.0：怪物生成数量 ×3（见 underrun-game.js 生成点修改）
+var VERSION = 'v1.1.0';
 
 Work.register({
   name: 'underrun',

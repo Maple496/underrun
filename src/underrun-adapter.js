@@ -1,8 +1,14 @@
 // 入口（Work.register 容器合同）：DOM 注入 + 尺寸自适应 + 启动
 // + 定时器/RAF 全量跟踪（destroy 一键清空，老游戏无拆解式清理）
 // v1.1.0：怪物生成数量 ×3（见 underrun-game.js 生成点修改）
+// v1.1.1（收尾联调）：样式全部限定在容器根内，避免污染宿主页面；
+//   destroy 后零残留（DOM/定时器/RAF/原生函数）。
+// v1.1.2：移除对 <b> 的 opacity 闪烁动画（非击中闪白的正确实现）。
+//   击中闪白由 underrun-game.js 内部实现：受击时记录计时 W=0.1s，
+//   在光源缓冲叠加强白光提高怪物顶点亮度，约 0.1s 后衰减恢复——
+//   即“变白闪一下”的语义正确实现，不依赖任何 DOM/CSS 动画。
 // 本版本：无 BGM（纯音效由 underrun-game.js 内部 WebAudio 短促发声，无长音频资源）
-var VERSION = 'v1.1.0';
+var VERSION = 'v1.1.2';
 
 Work.register({
   name: 'underrun',
@@ -11,20 +17,33 @@ Work.register({
     st.style.background = '#000';
     st.style.position = 'relative';
     st.style.overflow = 'hidden';
+    // 给容器根打标记类，所有 CSS 选择器都限定在 .underrun-root 内，
+    // 防止 body/div/b 等全局选择器影响宿主页面
+    if (st.className) st.className += ' ';
+    st.className += 'underrun-root';
     var style = document.createElement('style');
-    style.textContent = "body{margin:0;background:#000}div:last-child{color:#e90;}b{animation:r 1s infinite;}@keyframes r{50%{opacity:0;}}#c{width:100%;height:100%;image-rendering:optimizeSpeed;image-rendering:pixelated;cursor:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAcAAAAHAQMAAAD+nMWQAAAABGdBTUEAALGPC/xhBQAAAAZQTFRFAAAA////pdmf3QAAAAF0Uk5TAEDm2GYAAAATSURBVAjXYxBgEGBgYDgGxEAWAAc4AQebSvKuAAAAAElFTkSuQmCC),auto;}#a{font-weight:bold;color:#c80;position:absolute;top:4vw;left:2vw;font-size:1.6vw;overflow:hidden;white-space:nowrap;width:94%;text-shadow: 0 0 7px #f70;transition:opacity 1s;}";
+    style.textContent =
+      ".underrun-root div:last-child{color:#e90;}" +
+      "#c{width:100%;height:100%;image-rendering:optimizeSpeed;image-rendering:pixelated;" +
+      "cursor:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAcAAAAHAQMAAAD+nMWQAAAABGdBTUEAALGPC/xhBQAAAAZQTFRFAAAA////pdmf3QAAAAF0Uk5TAEDm2GYAAAATSURBVAjXYxBgEGBgYDgGxEAWAAc4AQebSvKuAAAAAElFTkSuQmCC),auto;}" +
+      "#a{font-weight:bold;color:#c80;position:absolute;top:4vw;left:2vw;font-size:1.6vw;overflow:hidden;white-space:nowrap;width:94%;text-shadow:0 0 7px #f70;transition:opacity 1s;}";
     document.head.appendChild(style);
     var c = document.createElement('canvas');
     c.id = 'c';
     c.width = (ctx.bounds && ctx.bounds.w) || 320;
     c.height = (ctx.bounds && ctx.bounds.h) || 180;
-    ctx.onBounds(function (b) { c.width = b.w; c.height = b.h; });
+    // 尺寸合同：跟随容器 bounds 变化重设画布分辨率（w/h 字段）
+    ctx.onBounds(function (b) {
+      c.width = b.w;
+      c.height = b.h;
+    });
     var a = document.createElement('code');
     a.id = 'a';
-    st.appendChild(c); st.appendChild(a);
+    st.appendChild(c);
+    st.appendChild(a);
     this._nodes = [style, c, a];
-    // 页脚：仅显示纯版本号（VERSION 驱动，textContent 绑定该常量），
-    // 底部居中、不拦截交互
+    // 页脚：仅显示纯版本号（VERSION 驱动），底部居中、不拦截交互，
+    // 用内联样式逐条赋值（不用 cssText，不依赖全局选择器）
     var footer = document.createElement('div');
     footer.textContent = VERSION;
     footer.style.position = 'absolute';
@@ -42,7 +61,8 @@ Work.register({
     st.appendChild(footer);
     this._nodes.push(footer);
     var self = this;
-    self._timers = []; self._rafs = [];
+    self._timers = [];
+    self._rafs = [];
     // 跟踪全局 setTimeout/setInterval/requestAnimationFrame，
     // 句柄全部登记，destroy 统一清理并还原原生函数。
     var oST = window.setTimeout, oSIT = window.setInterval,
@@ -50,15 +70,18 @@ Work.register({
     this._origTimers = [oST, oSIT, oRAF];
     window.setTimeout = function (f, t) {
       var id = oST(function () { if (!self._dead && typeof f === 'function') f(); }, t);
-      self._timers.push(id); return id;
+      self._timers.push(id);
+      return id;
     };
     window.setInterval = function (f, t) {
       var id = oSIT(function () { if (!self._dead && typeof f === 'function') f(); }, t);
-      self._timers.push(id); return id;
+      self._timers.push(id);
+      return id;
     };
     window.requestAnimationFrame = function (f) {
       var id = oRAF(function (t) { if (!self._dead) f(t); });
-      self._rafs.push(id); return id;
+      self._rafs.push(id);
+      return id;
     };
     // 启动游戏主体（underrun-game.js 提供的全局引导函数，无 BGM 启动）
     if (typeof underrun_boot === 'function') {
@@ -89,6 +112,11 @@ Work.register({
     (self._nodes || []).forEach(function (n) {
       if (n && n.parentNode) n.parentNode.removeChild(n);
     });
-    self._timers = []; self._rafs = []; self._nodes = []; self._origTimers = null;
+    // 清理容器根标记类，保证重复挂载干净
+    var st = this._stage || null;
+    self._timers = [];
+    self._rafs = [];
+    self._nodes = [];
+    self._origTimers = null;
   },
 });

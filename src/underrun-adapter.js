@@ -10,8 +10,8 @@ Work.register({
     document.head.appendChild(style);
     var c = document.createElement('canvas');
     c.id = 'c';
-    c.width = ctx.bounds.w || 320;
-    c.height = ctx.bounds.h || 180;
+    c.width = (ctx.bounds && ctx.bounds.w) || 320;
+    c.height = (ctx.bounds && ctx.bounds.h) || 180;
     ctx.onBounds(function (b) { c.width = b.w; c.height = b.h; });
     var a = document.createElement('code');
     a.id = 'a';

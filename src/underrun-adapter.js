@@ -21,7 +21,7 @@ Work.register({
     st.appendChild(c); st.appendChild(a);
     this._nodes = [style, c, a];
     // 页脚：仅显示纯版本号（VERSION 驱动，textContent 绑定该常量），
-    // 底部居中、不拦截交互；VERSION 更新时此处文本随之更新
+    // 底部居中、不拦截交互
     var footer = document.createElement('div');
     footer.textContent = VERSION;
     footer.style.position = 'absolute';

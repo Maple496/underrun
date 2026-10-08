@@ -20,9 +20,9 @@ Work.register({
     a.id = 'a';
     st.appendChild(c); st.appendChild(a);
     this._nodes = [style, c, a];
-    // 页脚：版本号展示（VERSION v1.0.0），底部居中，不影响交互
+    // 页脚：仅显示版本号（v1.0.0），底部居中，不影响交互
     var footer = document.createElement('div');
-    footer.textContent = 'VERSION ' + VERSION;
+    footer.textContent = VERSION;
     footer.style.position = 'absolute';
     footer.style.bottom = '0';
     footer.style.left = '0';
